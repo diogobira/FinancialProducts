@@ -15,26 +15,28 @@ type stock
 	amount::Float64
 	dividend_yield::Float64		
 	dividend_frequency::Int64
-	index::ASCIIString
+	ticker::ASCIIString
 
 	#Constructor
-	function stock(amount::Float64, dividend_yield::Float64, dividend_frequency::Int64, index::ASCIIString)
-		new(amount, dividend_yield, dividend_frequency, index)
+	function stock(amount::Float64, dividend_yield::Float64, dividend_frequency::Int64, ticker::ASCIIString)
+		new(amount, dividend_yield, dividend_frequency, ticker)
 	end
 
 end
 
-### CashFlow Projection
+### CashFlow Projection on contract index
 function projectCashFlow(c::stock)
 	H = 200
 	d = c.dividend_yield*c.dividend_frequency
 	v = [c.amount for i=1:H]
-	[cashFlow(i, v[i]*d, c.index) for i=1:c.dividend_frequency:H]
+	cfOnIndex = [cashFlow(i, v[i]*d, "DomesticCurrency") for i=1:c.dividend_frequency:H]
+	cfOnDomestic = cfOnIndex
+	return {:onIndex=> cfOnIndex, :onDomestic => cfOnDomestic}
 end
 
 ### MTM
 function mtm(c::stock)
-	c.amount	
+	c.amount * 25
 end
 
 
