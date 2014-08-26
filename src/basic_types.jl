@@ -1,51 +1,56 @@
-
-### Importing to allow overriding
-import Base.getindex
-
+###############################################
 ### Basic Types
+###############################################
 
-#CashFlow Type
 type cashFlow 
-	t::Int64
-	value::Float64
-	index::ASCIIString
+	t::Integer
+	v::Number
+	k::currency
 end
 
-#"Observable" Type. Can bem used, for instance, for stock spot prices or any other observable variable in the nature!
+type currency
+	name::String
+end
+
+type discountCurve
+	name::String
+	discount::Function
+end
+
 type observable
-	name::ASCIIString
+	name::String
 	value::Any
 end
 
-#Value Process Type
-type valueProcess
-	value::Array{Float64,1}
-	function valueProcess(baseIndex::Array{(Int64,Float64),1})
-		new([ baseIndex[i][2]/baseIndex[1][2]  for i=1:length(baseIndex)])
+###############################################
+### Basic Operations
+###############################################
+
+#Scale the cashFlows by a constant s
+function scale(c::Array{cashFlow,1}, s::Number)
+	map!(x -> cashFlow(x.t, x.v*s, x.k), c)
+end
+
+#Exchange the currency of a cashFlow
+function exchange(c::Array{cashFlow,1}, k::currency)
+end
+
+#Return the time where the last cashFlow occurs
+function horizon(c::Array{cashFlow,1})
+	maximum([x.t for x=c])
+end
+
+#Truncate all the cashFlows that occurs after time T
+function truncate(c::Array{cashFlow,1}, T::Number)
+	for i=1:length(c)
+		c[i].t > T ? deleteat!(c,i) : Nothing()
 	end
 end
 
-getindex(v::valueProcess, t) = v.value[t]
+#Discount the cashFlows, preserving the original currency
+function discount(c::Array{cashFlow,1}, d::Function)
+end	
 
-#Discount Process Type
-type discountProcess
-	value::Array{Float64,1}
-	function discountProcess(discountIndex::Array{(Int64,Float64),1})
-		new([ discountIndex[i][2]/discountIndex[1][2]  for i=1:length(discountIndex)])
-	end
-end
-
-getindex(v::discountProcess, t) = v.value[t]
-
-#Rating type
-type rating
-	sovereign_rating::ASCIIString
-	counterparty_rating::ASCIIString
-	operation_rating::ASCIIString
-end
-
-#Generic Financial Operation
-type genericFinancialOperation
-	financialOperation::Any
-	rating::rating
+#Discount the cashFlows and change
+function discount_and_rename_currency(c::Array{cashFlow,1}, k::currency)
 end
