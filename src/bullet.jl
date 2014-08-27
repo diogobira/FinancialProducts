@@ -23,16 +23,9 @@ type bullet
 
 end
 
-### CashFlow Projection on contract index
 function projectCashFlow(c::bullet)
-	cfOnIndex = [cashFlow(c.t,c.notional,c.index)]
-	cfOnDomestic = projectCashFlowOnDomesticCurrency(cfOnIndex, getProcessFromIndexName(c.index,valueProcess))
-	return {:onIndex=> cfOnIndex, :onDomestic => cfOnDomestic}
 end
 
-### MTM
 function mtm(cfOnDomestic::Array{cashFlow,1}, d::discountProcess)
-	dcf = discountedCashFlowValues(cfOnDomestic, d)
-	sum([x.value from x = dcf])
 end
 
