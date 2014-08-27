@@ -31,8 +31,14 @@ function scale(c::Array{cashFlow,1}, s::Number)
 	map!(x -> cashFlow(x.t, x.v*s, x.k), c)
 end
 
-#Exchange the currency of a cashFlow
+#Returns a new cashFlow array after currency conversion
 function exchange(c::Array{cashFlow,1}, k::currency)
+	cf = cashFlow[]
+	for i=1:length(c)
+		expr = (:call, symbol("exchange_",c[i].k,"_", k.name, :t)
+		push!(cf, cashFlow(c[i].t, eval(expr,t), k)
+	end
+	return cf
 end
 
 #Return the time where the last cashFlow occurs
@@ -57,10 +63,7 @@ function shiftleft(c::Array{cashFlow,1})
 	map!(x -> cashFlow(x.t-1, x.v, x.k), c)
 end
 
-#Discount the cashFlows, preserving the original currency
-function discount(c::Array{cashFlow,1}, d::Function)
+#Discount the cashFlows to a given currency
+function discount(c::Array{cashFlow,1}, k::currency)
 end	
 
-#Discount the cashFlows and change
-function discount_and_rename_currency(c::Array{cashFlow,1}, k::currency)
-end
