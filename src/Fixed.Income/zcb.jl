@@ -24,18 +24,9 @@ function projectCashFlow(c::zcb)
 	[cashFlow(c.t, c.notional, c.k)]
 end
 
-function projectCashFlow(c::zcb, k::currency)
-	cf = [cashFlow(c.t, c.notional, c.k)]
-	exchange_(cf,k)
-end
-
-
 ### MTM
 function mtm(c::zcb)
 	cf = projectCashFlow(c::zcb)
 	discount(cf)
-end
-
-function mtm(c::zcb, k::currency)
 end
 

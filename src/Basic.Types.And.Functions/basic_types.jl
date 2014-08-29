@@ -1,4 +1,9 @@
 ###############################################
+### Dependencies
+###############################################
+
+
+###############################################
 ### Basic Types
 ###############################################
 
@@ -50,6 +55,11 @@ end
 #Returns a discounted cashFlow array given a discountCurve
 function discount(c::Array{cashFlow,1}, d::discountCurve)
 	map(x -> cashFlow(x.t, x.v * d[x.t], x.k), cf)
+end	
+
+#Returns a discounted cashFlow array given a discountCurve and a destination currency
+function discount(c::Array{cashFlow,1}, d::discountCurve, k::currency)
+	map(x -> cashFlow(x.t, x.v * d[x.t], k), cf)
 end	
 
 #Return the time where the last cashFlow occurs
