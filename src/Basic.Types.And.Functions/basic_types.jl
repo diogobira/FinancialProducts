@@ -11,10 +11,16 @@ type currency
 	name::String
 end
 
-type cashFlow 
+type cashFlow
+	t0::Integer 
 	t::Integer
 	v::Number
 	k::currency
+
+	function cashFlow(t::Integer, v::Number, k::currency, t0=0)
+		new(t0, t, v, k)
+	end
+
 end
 
 type discountCurve 
